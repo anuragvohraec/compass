@@ -1,7 +1,8 @@
 # Compass
 A very simple route detection library.\
-![compass logo](logo/logo.svg "Compass logo")
+![compass logo](logo.svg "Compass logo")
 
+[![nest badge](https://nest.land/badge.svg)](https://nest.land/package/compass)
 
 Supports colon based path params, no regex matching [and hence very simple].
 

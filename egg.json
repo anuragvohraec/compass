@@ -1,0 +1,13 @@
+{
+  "name": "compass",
+  "description": "A very simple route detection library",
+  "stable": true,
+  "files": [
+    "compass_test.ts",
+    "compass.ts",
+    "LICENSE.txt",
+    "mode.ts",
+    "README.md"
+  ],
+  "folders":["logo"]
+}
