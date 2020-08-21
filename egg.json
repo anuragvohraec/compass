@@ -7,7 +7,7 @@
     "compass.ts",
     "LICENSE.txt",
     "mode.ts",
-    "README.md"
-  ],
-  "folders":["logo"]
+    "README.md",
+    "logo.svg"
+  ]
 }
