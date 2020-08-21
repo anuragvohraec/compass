@@ -22,7 +22,7 @@ console.log(c.find("/name_of/anurag/info"));
      matched_pattern: "/name_of/:usrname/info" 
 }
 */
-console.log(c.find("/:docid/meta/:param_name"));
+console.log(c.find("/123/meta/size"));
 /*
 {
   path_params: { docid: "123", param_name: "size" },
@@ -31,7 +31,7 @@ console.log(c.find("/:docid/meta/:param_name"));
 */
 
 
-console.log(c.find("/name_of/department/:dep_code/info"));
+console.log(c.find("/name_of/department/123/info"));
 /*
 {
   path_params: { dep_code: "123" },
