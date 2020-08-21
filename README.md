@@ -1,5 +1,10 @@
 # Compass
-A very simple route detection library. Supports only colon based path params, no regex matching [and hence very simple].
+A very simple route detection library.\
+![compass logo](logo/logo.svg "Compass logo")
+
+
+Supports colon based path params, no regex matching [and hence very simple].
+
 
 It can be used to define and find paths like:
 ```js
