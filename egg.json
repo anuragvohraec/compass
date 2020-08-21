@@ -2,6 +2,7 @@
   "name": "compass",
   "description": "A very simple route detection library",
   "stable": true,
+  "repository":"https://github.com/anuragvohraec/compass"
   "files": [
     "compass_test.ts",
     "compass.ts",
