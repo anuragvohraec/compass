@@ -5,10 +5,25 @@ export interface PathParams{
 export interface PathDirection{
     path_params: PathParams;
     matched_pattern:string;
+    parent_matches: string[];
 }
 
+export interface PathTypes{
+    value?: string,
+    plain?: PathNames;
+    parameterized?: PathNames;
+}
+
+export interface PathNames{
+    [key:string]:PathTypes;
+}
+
+// export interface PathTree{
+//     [key:number]:PathTypes
+// }
+
 export class Compass {
-    private path_tree:any ={};
+    private path_tree:PathTypes ={};
 
     /**
      * use to define new paths, to later find them with find function.
@@ -26,17 +41,19 @@ export class Compass {
             parts.shift();
         }
 
-        //First key wll be number of parts
-        if(!this.path_tree[parts.length]){
-            this.path_tree[parts.length]={
-            };
+        //for root case
+        if(parts.length==0){
+            this.path_tree.value="/";
+            return;
         }
-        let s=this.path_tree[parts.length];//start node
+
+        //First key wll be number of parts
+        let s=this.path_tree;//start node
         let c=0;
         for(let p of parts){
             const isPlain = !(p.startsWith(":"));
             
-            let t : any; //type
+            let t : PathNames|undefined; //type
 
             if(isPlain){
                 t=s.plain;
@@ -56,13 +73,13 @@ export class Compass {
             }
 
             const v = t[p];//value
-            const value_type=typeof v;
-            if(value_type === "string"){
+            const value_type=typeof ((v && v.value)?v.value:v);
+            if(value_type === "string" && c===parts.length-1){
                 return;
             }else if(value_type === "undefined"){
                 if(parts.length-1===c){
                     //is last element;
-                    t[p]=path_pattern;
+                    t[p]={value:path_pattern};
                     return;
                 }else{
                     t[p]={};
@@ -92,46 +109,65 @@ export class Compass {
         while(parts[0]===""){
             parts.shift();
         }
+        //for root
         if(parts.length==0){
-            return {path_params:{},matched_pattern:"/"};
+            if(this.path_tree.value){
+                return {path_params:{},matched_pattern:"/",parent_matches:[]};
+            }else{
+                return;
+            }
         }
-        let s = this.path_tree[parts.length];
+        let s:PathTypes = this.path_tree;
         //no entry with the given length simply return
         if(!s){
             return;
         }else{
             let path_params:PathParams={};
-            return this._find(0,parts,s, path_params);
+            let parent_matches: string[] =[];
+            if(s.value){
+                parent_matches.push("/");
+            }
+            return this._find(0,parts,s, path_params, parent_matches);
         }
     }
 
-    _find(d:number,parts:any[],s:any, path_params:PathParams):PathDirection|undefined{
+    _find(d:number,parts:string[],s:PathTypes, path_params:PathParams, parent_matches: string[]):PathDirection|undefined{
         let p=parts[d];
-        let t = s.plain?s.plain[p]:undefined;
-        if(t){
-            if(typeof t==='string'){
+        let t: string|PathTypes|undefined = s.plain?s.plain[p]:undefined;
+        let v = (t && t.value)?t.value:undefined;
+        if(v){
+            if(typeof v==='string'){
                 if(d === parts.length-1){
-                    return {path_params, matched_pattern:t};
+                    return {path_params, matched_pattern:v,parent_matches:parent_matches};
                 }else{
-                    return;
+                    d++;
+                    parent_matches.push(v);
+                    return this._find(d,parts,t!,path_params,parent_matches);
                 }
             }else{
                 d++;
-                return this._find(d,parts,t,path_params);
+                return this._find(d,parts,t!,path_params, parent_matches);
             }
+        }else if(t){
+            d++;
+            return this._find(d,parts,t!,path_params, parent_matches);
         }else if(s.parameterized){
             for(let i of Object.keys(s.parameterized)){
                 t= s.parameterized[i];
+                let v = (t && t.value)?t.value:undefined;
                 path_params[i]=p;
-                if(typeof t==='string'){
+                if(typeof v==='string'){
                     if(d===parts.length-1){
-                        return {path_params, matched_pattern:t};
+                        return {path_params, matched_pattern:v, parent_matches: parent_matches};
                     }else{
-                        return;
+                        d++;
+                        parent_matches.push(v);
+                        return this._find(d,parts,t!,path_params,parent_matches);
                     }
                 }else{
+                    //t is either undefined or object
                     d++;
-                    let z = this._find(d,parts,t,path_params);
+                    let z = this._find(d,parts,t,path_params,parent_matches);
                     if(z){
                         return z;
                     }else{

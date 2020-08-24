@@ -1,5 +1,6 @@
 {
   "name": "compass",
+  "version": "1.0.0",
   "description": "A very simple route detection library",
   "stable": true,
   "repository":"https://github.com/anuragvohraec/compass",
