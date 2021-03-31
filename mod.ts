@@ -1,1 +1,1 @@
-export {Compass} from './compass.ts';
+export * from './compass.ts';
