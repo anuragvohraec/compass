@@ -1,6 +1,6 @@
 {
   "name": "compass",
-  "version": "1.0.0",
+  "version": "1.0.6",
   "description": "A very simple route detection library",
   "stable": true,
   "repository":"https://github.com/anuragvohraec/compass",
@@ -8,7 +8,7 @@
     "compass_test.ts",
     "compass.ts",
     "LICENSE.txt",
-    "mode.ts",
+    "mod.ts",
     "README.md",
     "logo.svg"
   ]
